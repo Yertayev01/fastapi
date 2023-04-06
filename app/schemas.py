@@ -14,7 +14,7 @@ class PostCreate(PostBase):
 class UserOut(BaseModel):
     id: int
     email: EmailStr
-    created_at: datetime
+    #created_at: datetime
     
     class Config:
         orm_mode = True

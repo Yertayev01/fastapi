@@ -22,8 +22,9 @@ TestingSessionLocal = sessionmaker(
     autocommit=False, autoflush=False, bind=engine)
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture()
 def session():
+    print("my session fixture ran")
     Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
     db = TestingSessionLocal()
@@ -33,7 +34,7 @@ def session():
         db.close()
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture()
 def client(session):
     def override_get_db():
 
@@ -59,9 +60,12 @@ def test_user2(client):
 
 @pytest.fixture
 def test_user(client):
-    user_data = {"email": "log@gmail.com", "password": "password123"}
+    user_data = {"email": "log@gmail.com", 
+                 "password": "password123"}
     res = client.post("/users/", json = user_data)
+
     assert res.status_code == 201
+    
     new_user = res.json()
     new_user["password"] = user_data["password"]
     return new_user

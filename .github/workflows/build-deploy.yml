@@ -71,27 +71,31 @@ jobs:
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
 
-      - name: deploy to ubuntu server
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{secrets.PROD_HOST}}
-          username: ${{secrets.PROD_USERNAME}}
-          password: ${{secrets.PROD_PASSWORD}}
-          script: |
-            cd app/src
-            git pull
-            echo ${{secrets.PROD_PASSWORD}} | sudo -S systemctl restart api
-      # deploy:
-      #   needs: [build]
-      #   runs-on: ubuntu-latest
+      # - name: deploy to ubuntu server
+      #   uses: appleboy/ssh-action@master
+      #   with:
+      #     host: ${{secrets.PROD_HOST}}
+      #     username: ${{secrets.PROD_USERNAME}}
+      #     password: ${{secrets.PROD_PASSWORD}}
+      #     script: |
+      #       cd app/src
+      #       git pull
+      #       echo ${{secrets.PROD_PASSWORD}} | sudo -S systemctl restart api
 
-      #   steps:
-      #     - name: SSH deploy
-      #       uses: appleboy/ssh-action@master
-      #       with:
-      #         host:
-      #         username:
-      #         key:
-      #         port:
+      name: remote ssh command 
+      on: [push]
+      jobs:
 
-      #         script: |
+        build:
+          name: Build
+          runs-on: ubuntu-latest
+          steps:
+          - name: executing remote ssh commands using password
+            uses: appleboy/ssh-action@master
+            with:
+              host: ${{ secret.HOST }}
+              username: ${{ secrets.USERNAME }}
+              password: ${{ secrets.PASSWORD }}
+              port: ${{ secrets.PORT }}
+              script: whoami 
+   

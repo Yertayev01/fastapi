@@ -81,4 +81,17 @@ jobs:
             cd app/src
             git pull
             echo ${{secrets.PROD_PASSWORD}} | sudo -S systemctl restart api
-   
+      # deploy:
+      #   needs: [build]
+      #   runs-on: ubuntu-latest
+
+      #   steps:
+      #     - name: SSH deploy
+      #       uses: appleboy/ssh-action@master
+      #       with:
+      #         host:
+      #         username:
+      #         key:
+      #         port:
+
+      #         script: |
